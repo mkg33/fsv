@@ -22,7 +22,7 @@ public class IndexBinomialMinPQTest {
 		
 		int randomIndex = value.nextInt(99); //create a random integer between 0 and 99
 		
-		IndexBinomialMinPQ emptyPQ = new IndexBinomialMinPQ(0); //create an empty PQ
+		IndexBinomialMinPQ<Integer> emptyPQ = new IndexBinomialMinPQ<Integer>(0); //create an empty PQ
 		
 		assertThat(emptyPQ).isEmpty();
 		
@@ -30,7 +30,7 @@ public class IndexBinomialMinPQTest {
         	return false;
         }
         
-        IndexBinomialMinPQ fullPQ = new IndexBinomialMinPQ(randomDim); //create a PQ of size between 100 and 1000
+        IndexBinomialMinPQ<String> fullPQ = new IndexBinomialMinPQ<>(randomDim); //create a PQ of size between 100 and 1000
         
         fullPQ.insert(randomIndex, "test"); //insert the string "test" at index between 0 and 99
         
@@ -44,41 +44,44 @@ public class IndexBinomialMinPQTest {
 	}
 	
 	
-	/*@Property
-	boolean contains(@ForAll("Non-negative integers") int i) {
+	@Property
+	boolean contains(@ForAll @IntRange(min=1, max=1000) int i) { //if we use positive integers (see below), we get the "OutOfMemoryError"
 		
 		
-		if(i!=0) {
-			IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(0); //create an empty queue that doesn't contain the index i
+			IndexBinomialMinPQ<String> testPQ = new IndexBinomialMinPQ<>(i+1); //create an empty queue that contains the index i
+			
+			testPQ.insert(i, "some key");
+			
 			
 			try {
 			
-			    if(testPQ.contains(i)) { //fail if contains() determines that the queue contains the index i
+			    if(testPQ.contains(i) && !testPQ.contains(i-1)) { 
 				
-				    return false;
+				    return true;
 			    }
+			    
+			    
+			    else {
+			    	return false;
+			    }
+			    
 			} catch(IllegalArgumentException e) {
+				
 				assertThat(e).hasMessage("Illegal argument provided!");
+				
 			}
 			
-			
-		}
-		
-		else {
-			IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(i+2); //create an empty queue that contains the index i
-			
-			if(!testPQ.contains(i)) { //fail if contains() determines that the queue doesn't contain the index i
- 				return false;
-			}
-			
-		}
-		
-		return true;
-	}*/
+		return false;
+	}
 	
 	@Provide("Non-negative integers")
 	Arbitrary<Integer> numbers(){
 		return Arbitraries.integers().greaterOrEqual(0);
+	}
+	
+	@Provide("Positive integers")
+	Arbitrary<Integer> numbers2(){
+		return Arbitraries.integers().greaterOrEqual(1);
 	}
 	
 	
@@ -89,7 +92,7 @@ public class IndexBinomialMinPQTest {
 		int randomDim = value.nextInt(5000); //create a random integer between 0 and 5000
 		
 		try {
-		IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(randomDim); //create a queue with a random dimension
+		IndexBinomialMinPQ<Integer> testPQ = new IndexBinomialMinPQ<>(randomDim); //create a queue with a random dimension
 		
 		} catch(ArithmeticException e) {
 			
@@ -100,20 +103,16 @@ public class IndexBinomialMinPQTest {
 		
 	}
 	
-/*	@Property
-	void insert(@ForAll("Non-negative integers") int i, Key key) {
+	@Property
+	void insert(@ForAll @IntRange(min=0, max=1000) int i, @ForAll @IntRange(min=0, max=1000) Integer key) {
 		
-		Random value = new Random();
-		
-		int randomDim = value.nextInt(100); //create a random integer between 0 and 100
-		
-		IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(i+randomDim);
-		
+		IndexBinomialMinPQ<Integer> testPQ = new IndexBinomialMinPQ<>(i+1);
+	
 		testPQ.insert(i, key);
 		
-		assertThat(testPQ).element(i).isEqualTo(key);
+		assertThat(testPQ.keyOf(i)).isEqualTo(key);   
 		
-	}*/
+	}
 	
 	@Property
 	int minIndex() {
@@ -126,7 +125,7 @@ public class IndexBinomialMinPQTest {
 		
 		int minKey = Integer.MAX_VALUE;
 		
-		IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(randomDim); //create a queue
+		IndexBinomialMinPQ<Integer> testPQ = new IndexBinomialMinPQ<>(randomDim); //create a queue
 		
 		for(int i=0; i<testPQ.size(); i++) { //fill the queue with random (integer) keys
 			
@@ -176,21 +175,22 @@ public class IndexBinomialMinPQTest {
 	}*/
 	
 	@Property
-	void delete(@ForAll @IntRange(min=0, max=1000) int i) { 
+	void delete(@ForAll @IntRange(min=1, max=1000) int i) { 
 		
-	     IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(i+5); 	
+	     IndexBinomialMinPQ<String> testPQ = new IndexBinomialMinPQ<>(i+10);
+	     
+	     testPQ.insert(i-1, "another Key");
 		
-		for(int j=0; j<testPQ.size(); j++) {
-			
-			testPQ.insert(j, "fillerKey");
-		}
+		 testPQ.insert(i, "some Key"); 
 		
-		//testPQ.changeKey(i, "test"); //why java.lang.IllegalArgumentException: Specified index is not in the queue ?!
+		 testPQ.insert(i+1, "key");
 		
-		//testPQ.delete(i);
-		
-	    assertThat(testPQ).doesNotContain("test");
-		
+		 testPQ.delete(i);
+		 
+		 testPQ.insert(i, "yet another key");
+		 
+		 assertThat(testPQ.keyOf(i)).doesNotContain("some Key");
+	   
 	}
 	
 }
