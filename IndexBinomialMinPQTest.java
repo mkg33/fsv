@@ -149,11 +149,11 @@ public class IndexBinomialMinPQTest {
 		
 	}*/
 	
-	@Property
+	/*@Property
 	int delMin() 
 	{
 	    return 0;
-	}
+	}*/
 	
     /*@Property
     Key keyOf(int i) {
