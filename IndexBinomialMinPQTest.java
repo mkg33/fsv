@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 
 import edu.princeton.cs.algs4.beyond.IndexBinomialMinPQ;
 import net.jqwik.api.*;
+import net.jqwik.api.constraints.IntRange;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import static org.assertj.core.api.Assertions.*;
@@ -126,7 +128,7 @@ public class IndexBinomialMinPQTest {
 		
 		IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(randomDim); //create a queue
 		
-		for(int i=0; i<randomDim; i++) { //fill the queue with random (integer) keys
+		for(int i=0; i<testPQ.size(); i++) { //fill the queue with random (integer) keys
 			
 		    int randomKey = value.nextInt();
 		    
@@ -147,6 +149,48 @@ public class IndexBinomialMinPQTest {
 		
 	}*/
 	
-
-
+	@Property
+	int delMin() 
+	{
+	    return 0;
+	}
+	
+    /*@Property
+    Key keyOf(int i) {
+    
+    }*/
+	
+	/*@Property
+	void changeKey(int i, Key key) {
+		
+	}*/
+	
+	/*@Property
+	void decreaseKey(int i, Key key) {
+		
+	}*/
+	
+	/*@Property
+	void increaseKey(int i, Key key) {
+		
+	}*/
+	
+	@Property
+	void delete(@ForAll @IntRange(min=0, max=1000) int i) { 
+		
+	     IndexBinomialMinPQ testPQ = new IndexBinomialMinPQ(i+5); 	
+		
+		for(int j=0; j<testPQ.size(); j++) {
+			
+			testPQ.insert(j, "fillerKey");
+		}
+		
+		//testPQ.changeKey(i, "test"); //why java.lang.IllegalArgumentException: Specified index is not in the queue ?!
+		
+		//testPQ.delete(i);
+		
+	    assertThat(testPQ).doesNotContain("test");
+		
+	}
+	
 }
