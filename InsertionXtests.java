@@ -32,7 +32,7 @@ public class InsertionXtests {
     @Property
     void isSorted(@ForAll Comparable[] v) {
         InsertionX.sort(v);
-        Assertions.assertThat(a).isSorted();
+        Assertions.assertThat(v).isSorted();
     }
 	
 	//@Property //how can we test it AT ALL without invoking sort(a)??? I always get the StackOverflowError :-(
