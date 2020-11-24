@@ -9,25 +9,4 @@ Also, the catch blocks are unreachable (in my tests) because if I allow 'failing
 
 Incidentally, your code also has unreachable elements (in particular, the catch blocks). Hmm and also the for loop in the toString() function. I'm looking into it now.
 
-It's this part:
-
-```
-	void testToString(@ForAll Integer[] v) {
-		Stack<Integer> s = new Stack<>();
-		String tmp       = "";
-		
-		// At the beginning, the string representation should be empty.
-		assertThat(s.toString()).isEqualTo("");
-		
-		// Push items onto the stack, insert them at the beginning of tmp and check if they match.
-		for (int i = 0; i < v.length; i++) {
-			s.push(v[i]);
-			if (i > 0) {
-				tmp = v[i] + " " + tmp;
-			} else {
-				tmp = "" + v[i];
-			}
-			assertThat(s.toString()).isEqualTo(tmp);
-		}
-
-```
+OK, I fixed it. The culprit was in the second for loop (tmp replace all - the assertion mustn't be inside the loop).
