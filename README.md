@@ -9,7 +9,7 @@ Also, the catch blocks are unreachable (in my tests) because if I allow 'failing
 
 Incidentally, your code also has unreachable elements (in particular, the catch blocks). Hmm and also the for loop in the toString() function. I'm looking into it now.
 
-Oh, I get it now. In this part:
+It's this part:
 
 ```
 	void testToString(@ForAll Integer[] v) {
@@ -31,5 +31,3 @@ Oh, I get it now. In this part:
 		}
 
 ```
-
-The stack is initially empty, so if (the test value) v.length == 0 and the for loop never actually pushes anything to the stack. That's why there's the supposed failure after the test...
