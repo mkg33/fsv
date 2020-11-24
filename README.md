@@ -8,3 +8,28 @@ Let me know if you're happy with the final result and then we can submit the pro
 Also, the catch blocks are unreachable (in my tests) because if I allow 'failing arguments', the exception is caught but the console output says that the exception was caught but further checks are automatically terminated. This is stupid. Or pehaps I am. I think the latter.
 
 Incidentally, your code also has unreachable elements (in particular, the catch blocks). Hmm and also the for loop in the toString() function. I'm looking into it now.
+
+Oh, I get it now. In this part:
+
+```
+	void testToString(@ForAll Integer[] v) {
+		Stack<Integer> s = new Stack<>();
+		String tmp       = "";
+		
+		// At the beginning, the string representation should be empty.
+		assertThat(s.toString()).isEqualTo("");
+		
+		// Push items onto the stack, insert them at the beginning of tmp and check if they match.
+		for (int i = 0; i < v.length; i++) {
+			s.push(v[i]);
+			if (i > 0) {
+				tmp = v[i] + " " + tmp;
+			} else {
+				tmp = "" + v[i];
+			}
+			assertThat(s.toString()).isEqualTo(tmp);
+		}
+
+```
+
+The stack is initially empty, so v.length == 0 and the for loop never actually pushes anything to the stack. That's why there's the supposed failure after the test.
