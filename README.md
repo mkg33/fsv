@@ -32,4 +32,4 @@ Oh, I get it now. In this part:
 
 ```
 
-The stack is initially empty, so v.length == 0 and the for loop never actually pushes anything to the stack. That's why there's the supposed failure after the test.
+The stack is initially empty, so if (the test value) v.length == 0 and the for loop never actually pushes anything to the stack. That's why there's the supposed failure after the test...
