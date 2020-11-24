@@ -183,18 +183,16 @@ public class TestStack {
 		// Push items onto the stack, insert them at the beginning of tmp and check if they match.
 		for (int i = 0; i < v.length; i++) {
 			s.push(v[i]);
-			
 		    tmp = v[i] + " " + tmp;
-
 			assertThat(s.toString()).isEqualTo(tmp);
 		}
 		
 		try {
 			// Pop the items from the stack, remove them from tmp and check if they match.
 			for (int i = 0; i < v.length; i++) {
-				s.pop();
-				tmp = tmp.replaceAll(".+ ", "");
+				s.pop();	
 			}
+			tmp = tmp.replaceAll(".+ ", "");
 			assertThat(s.toString()).isEqualTo(tmp);
 		} catch (NoSuchElementException e) {
 			fail("Custom stack is empty.");
