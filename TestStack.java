@@ -179,14 +179,13 @@ public class TestStack {
 		// At the beginning, the string representation should be empty.
 		assertThat(s.toString()).isEqualTo("");
 		
+		
 		// Push items onto the stack, insert them at the beginning of tmp and check if they match.
 		for (int i = 0; i < v.length; i++) {
 			s.push(v[i]);
-			if (i > 0) {
-				tmp = v[i] + " " + tmp;
-			} else {
-				tmp = "" + v[i];
-			}
+			
+		    tmp = v[i] + " " + tmp;
+
 			assertThat(s.toString()).isEqualTo(tmp);
 		}
 		
@@ -195,15 +194,17 @@ public class TestStack {
 			for (int i = 0; i < v.length; i++) {
 				s.pop();
 				tmp = tmp.replaceAll(".+ ", "");
-				assertThat(s.toString()).isEqualTo(tmp);
 			}
+			assertThat(s.toString()).isEqualTo(tmp);
 		} catch (NoSuchElementException e) {
 			fail("Custom stack is empty.");
 		}
 		
+		
 		// At the end, the string representation should be empty again.
 		assertThat(s.toString()).isEqualTo("");
 	}
+	
 	
 	@Property
 	void testIterator(@ForAll Integer[] v) {
